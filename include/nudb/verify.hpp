@@ -270,7 +270,7 @@ verify (
     }
 
     float sum = 0;
-    for (int i = 0; i < info.hist.size(); ++i)
+    for (size_t i = 0; i < info.hist.size(); ++i)
         sum += info.hist[i] * (i + 1);
     //info.avg_fetch = sum / info.buckets;
     info.avg_fetch = float(fetches) / info.value_count;

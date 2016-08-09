@@ -5,7 +5,6 @@
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
 
-compile create.cpp : : ;
 compile api.cpp : : ;
 compile common.cpp : : ;
 compile create.cpp : : ;
@@ -21,16 +20,25 @@ compile win32_file.cpp : : ;
 unit-test callgrind-bench :
     xxHash/xxhash.c
     callgrind_test.cpp
+    :
+    :
+    <library>/boost/thread//boost_thread
     ;
 
 unit-test recover-test :
     xxHash/xxhash.c
     recover_test.cpp
+    :
+    :
+    <library>/boost/thread//boost_thread
     ;
 
 unit-test store-test :
     xxHash/xxhash.c
     store_test.cpp
+    :
+    :
+    <library>/boost/thread//boost_thread
     ;
 
 unit-test varint-test :

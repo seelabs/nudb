@@ -229,7 +229,7 @@ print(std::ostream& os, verify_info const& info)
         "dat_file_size:   " << num(info.dat_file_size) << std::endl;
 
     std::string s;
-    for (int i = 0; i < info.hist.size(); ++i)
+    for (size_t i = 0; i < info.hist.size(); ++i)
         s += (i==0) ?
             std::to_string(info.hist[i]) :
             (", " + std::to_string(info.hist[i]));

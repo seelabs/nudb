@@ -24,11 +24,11 @@
 #endif
 
 #if NUDB_POSIX_FILE
-# include <fcntl.hpp>
-# include <sys/types.hpp>
-# include <sys/uio.hpp>
-# include <sys/stat.hpp>
-# include <unistd.hpp>
+# include <fcntl.h>
+# include <sys/types.h>
+# include <sys/uio.h>
+# include <sys/stat.h>
+# include <unistd.h>
 #endif
 
 namespace nudb {
