@@ -13,7 +13,7 @@
 #include "xor_shift_engine.hpp"
 #include "xxhasher.hpp"
 
-#include <nudb.hpp>
+#include <nudb/nudb.hpp>
 #include <nudb/identity.hpp>
 #include <cstdint>
 #include <iomanip>
