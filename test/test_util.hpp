@@ -198,9 +198,9 @@ num (T t)
     return s2;
 }
 
-inline
+template<class Stream>
 void
-print(std::ostream& os, verify_info const& info)
+print(Stream& os, verify_info const& info)
 {
     os <<
         "avg_fetch:       " << std::fixed << std::setprecision(3) << info.avg_fetch << "\n" <<

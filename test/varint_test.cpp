@@ -5,8 +5,8 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#include "suite.hpp"
 #include <nudb/detail/varint.hpp>
+#include <beast/unit_test/suite.hpp>
 #include <array>
 #include <iostream>
 #include <vector>
@@ -14,7 +14,7 @@
 namespace nudb {
 namespace test {
 
-class varint_test : public suite
+class varint_test : public beast::unit_test::suite
 {
 public:
     void
@@ -61,5 +61,11 @@ int main()
 {
     std::cout << "varint_test:" << std::endl;
     nudb::test::varint_test t;
-    return t(std::cerr) ? EXIT_SUCCESS : EXIT_FAILURE;
+    beast::unit_test::suite_info si(
+        "varint test", "nudb", "nudb", false,
+        [&t](beast::unit_test::runner& r) {
+            t(r);
+        });
+    beast::unit_test::runner runner;
+    return !runner.run(si) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

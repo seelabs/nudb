@@ -23,6 +23,7 @@ unit-test callgrind-bench :
     :
     :
     <library>/boost/thread//boost_thread
+    <include>./deps/beast/extras
     ;
 
 unit-test recover-test :
@@ -31,6 +32,7 @@ unit-test recover-test :
     :
     :
     <library>/boost/thread//boost_thread
+    <include>./deps/beast/extras
     ;
 
 unit-test store-test :
@@ -39,8 +41,12 @@ unit-test store-test :
     :
     :
     <library>/boost/thread//boost_thread
+    <include>./deps/beast/extras
     ;
 
 unit-test varint-test :
     varint_test.cpp
+    :
+    :
+    <include>./deps/beast/extras
     ;

@@ -6,7 +6,7 @@
 //
 
 #include "test_util.hpp"
-#include "suite.hpp"
+#include "beast/unit_test/suite.hpp"
 #include <cmath>
 #include <iomanip>
 #include <memory>
@@ -21,7 +21,7 @@ namespace test {
 // set high to ensure that spill records are created,
 // exercised, and split.
 //
-class store_test : public suite
+class store_test : public beast::unit_test::suite
 {
 public:
     void
@@ -85,7 +85,7 @@ public:
             auto const stats = verify<test_api::hash_type>(
                 dp, kp, 1 * 1024 * 1024);
             expect(stats.hist[1] > 0, "no splits");
-            print(log(), stats);
+            print(log, stats);
         }
         catch (nudb::store_error const& e)
         {
@@ -122,5 +122,11 @@ int main()
 {
     std::cout << "store_test:" << std::endl;
     nudb::test::store_test t;
-    return t(std::cerr) ? EXIT_SUCCESS : EXIT_FAILURE;
+    beast::unit_test::suite_info si(
+        "store test", "nudb", "nudb", false,
+        [&t](beast::unit_test::runner& r) {
+            t(r);
+        });
+    beast::unit_test::runner runner;
+    return !runner.run(si) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

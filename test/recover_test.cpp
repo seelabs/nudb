@@ -5,8 +5,8 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#include "suite.hpp"
 #include "test_util.hpp"
+#include "beast/unit_test/suite.hpp"
 #include <cmath>
 #include <cstring>
 #include <memory>
@@ -16,7 +16,7 @@
 namespace nudb {
 namespace test {
 
-class basic_recover_test : public suite
+class basic_recover_test : public beast::unit_test::suite
 {
 public:
     // Creates and opens a database, performs a bunch
@@ -72,7 +72,7 @@ public:
         }
         catch(...)
         {
-            print(log(), info);
+            print(log, info);
             throw;
         }
         test_api::file_type::erase(dp);
@@ -100,7 +100,7 @@ public:
     void
     test_recover(float load_factor, std::size_t count)
     {
-        log() << count << " inserts" << std::endl;
+        log << count << " inserts" << std::endl;
 
         temp_dir td;
 
@@ -165,5 +165,11 @@ int main()
 {
     std::cout << "recover_test:" << std::endl;
     nudb::test::recover_test t;
-    return t(std::cerr) ? EXIT_SUCCESS : EXIT_FAILURE;
+    beast::unit_test::suite_info si(
+        "recover test", "nudb", "nudb", false,
+        [&t](beast::unit_test::runner& r) {
+            t(r);
+        });
+    beast::unit_test::runner runner;
+    return !runner.run(si) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

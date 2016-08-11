@@ -1,0 +1,3 @@
+[submodule "test/deps/beast"]
+	path = test/deps/beast
+	url = https://github.com/vinniefalco/Beast.git
