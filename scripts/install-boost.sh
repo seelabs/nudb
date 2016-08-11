@@ -14,15 +14,14 @@ if [[ -d ${BOOST_ROOT}/lib ]]; then
 fi
 
 wget ${BOOST_URL} -O /tmp/boost.tar.gz
-pushd $(dirname $BOOST_ROOT) > /dev/null
+pushd $(dirname ${BOOST_ROOT}) > /dev/null
 rm -fr ${BOOST_ROOT}
 tar xzf /tmp/boost.tar.gz
 popd > /dev/null
 
 pushd ${BOOST_ROOT} > /dev/null
-./bootstrap.sh --prefix=$BOOST_ROOT
-params="address-model=${DDRESS_MODEL}"
-./b2 $params
-./b2 -d0 $params install
+./bootstrap.sh --prefix=${BOOST_ROOT}
+params="address-model=${ADDRESS_MODEL}"
+./b2 ${params}
+./b2 -d0 ${params} install
 popd > /dev/null
-

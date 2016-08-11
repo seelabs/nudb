@@ -22,7 +22,7 @@ set -euxo pipefail
 mkdir ${HOME}/bin
 for g in gcc g++ gcov gcc-ar gcc-nm gcc-ranlib
 do
-  g_path = $(type -p ${g}-${GCC_VER})
+  g_path=$(type -p ${g}-${GCC_VER})
   if [[ -x ${g_path} ]]; then
       ln -sv ${g_path} $HOME/bin/${g}
   else
@@ -43,7 +43,7 @@ if [[ -n ${CLANG_VER:-} ]]; then
         wget -O - ${LLVM_URL} | tar -Jxvf - --strip 1 -C llvm-${LLVM_VERSION}
     fi
     llvm-${LLVM_VERSION}/bin/llvm-config --version;
-    export LLVM_CONFIG="llvm-${LLVM_VERSION}/bin/llvm-config";
+    export LLVM_CONFIG=llvm-${LLVM_VERSION}/bin/llvm-config;
 fi
 
 export PATH=${HOME}/bin:$PATH
