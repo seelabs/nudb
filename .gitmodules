@@ -1,6 +1,6 @@
-[submodule "test/deps/beast"]
-	path = test/deps/beast
+[submodule "deps/beast"]
+	path = deps/beast
 	url = https://github.com/vinniefalco/Beast.git
-[submodule "benchmark/deps/rocksdb"]
-	path = benchmark/deps/rocksdb
+[submodule "deps/rocksdb"]
+	path = deps/rocksdb
 	url = https://github.com/facebook/rocksdb.git
