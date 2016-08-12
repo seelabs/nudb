@@ -17,13 +17,15 @@ compile verify.cpp : : ;
 compile visit.cpp : : ;
 compile win32_file.cpp : : ;
 
+path-constant BEAST : deps/beast/extras ;
+
 unit-test callgrind-bench :
     xxHash/xxhash.c
     callgrind_test.cpp
     :
     :
     <library>/boost/thread//boost_thread
-    <include>./deps/beast/extras
+    <include>$(BEAST)
     ;
 
 unit-test recover-test :
@@ -32,7 +34,7 @@ unit-test recover-test :
     :
     :
     <library>/boost/thread//boost_thread
-    <include>./deps/beast/extras
+    <include>$(BEAST)
     ;
 
 unit-test store-test :
@@ -41,12 +43,12 @@ unit-test store-test :
     :
     :
     <library>/boost/thread//boost_thread
-    <include>./deps/beast/extras
+    <include>$(BEAST)
     ;
 
 unit-test varint-test :
     varint_test.cpp
     :
     :
-    <include>./deps/beast/extras
+    <include>$(BEAST)
     ;
