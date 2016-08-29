@@ -9,6 +9,8 @@
 #include <nudb/recover.hpp>
 
 #include "test_util.hpp"
+
+#include <nudb/test/test_store.hpp>
 #include <beast/unit_test/suite.hpp>
 #include <cmath>
 #include <cstring>
@@ -22,6 +24,23 @@ namespace test {
 class basic_recover_test : public beast::unit_test::suite
 {
 public:
+    void
+    test_ok()
+    {
+        std::size_t const keySize = 8;
+        std::size_t const blockSize = 256;
+        float const loadFactor = 0.5f;
+        
+        error_code ec;
+        test_store ts{keySize, blockSize, loadFactor};
+        ts.create(ec);
+        if(! BEAST_EXPECTS(! ec, ec.message()))
+            return;
+        recover<xxhasher>(ts.dp, ts.kp, ts.lp, ec);
+        if(! BEAST_EXPECTS(! ec, ec.message()))
+            return;
+    }
+
     // Creates and opens a database, performs a bunch
     // of inserts, then fetches all of them to make sure
     // they are there. Uses a fail_file that causes the n-th
@@ -149,11 +168,10 @@ public:
     void
     run() override
     {
-        float lf = 0.55f;
-        test_recover(lf, 0);
-        test_recover(lf, 10);
-        test_recover(lf, 100);
-        test_recover(lf, 1000);
+        float loadFactor = 0.55f;
+        test_ok();
+        for(auto const N : { 0, 10, 100, 1000 })
+            test_recover(loadFactor, N);
     }
 };
 
@@ -163,9 +181,9 @@ public:
     void
     run() override
     {
-        float lf = 0.90f;
-        test_recover(lf, 10000);
-        test_recover(lf, 100000);
+        float loadFactor = 0.90f;
+        test_recover(loadFactor, 10000);
+        test_recover(loadFactor, 100000);
     }
 };
 
