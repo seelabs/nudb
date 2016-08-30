@@ -1,16 +1,34 @@
 #!/usr/bin/env bash
-# Exit if anything fails.
-set -eux
 
-HERE=$PWD
+set -euxo pipefail
+# The above bash options do the following:
 
-# Override gcc version to $GCC_VER.
-# Put an appropriate symlink at the front of the path.
-mkdir -v $HOME/bin
+# -e When this option is on, if a simple command fails for any of the reasons
+#    listed in Consequences of Shell Errors or returns an exit status value >0,
+#    and is not part of the compound list following a while, until, or if
+#    keyword, and is not a part of an AND or OR list, and is not a pipeline
+#    preceded by the ! reserved word, then the shell shall immediately exit.
+# -u The shell shall write a message to standard error when it tries to expand a
+#    variable that is not set and immediately exit. An interactive shell shall
+#    not exit.
+# -x The shell shall write to standard error a trace for each command after it
+#    expands the command and before it executes it. It is unspecified
+#    whether the command that turns tracing off is traced.
+# -o pipefail
+#    Pipelines fail on the first command which fails instead of dying later on
+#    down the pipeline.
+
+# Put an appropriate gcc symlink at the front of the path.
+mkdir ${HOME}/bin
 for g in gcc g++ gcov gcc-ar gcc-nm gcc-ranlib
 do
-  test -x $( type -p ${g}-$GCC_VER )
-  ln -sv $(type -p ${g}-$GCC_VER) $HOME/bin/${g}
+  g_path=$(type -p ${g}-${GCC_VER})
+  if [[ -x ${g_path} ]]; then
+      ln -sv ${g_path} $HOME/bin/${g}
+  else
+      echo "Could not find ${g}-${GCC_VER}"
+      exit 1
+  fi
 done
 
 if [[ -n ${CLANG_VER:-} ]]; then
@@ -25,36 +43,13 @@ if [[ -n ${CLANG_VER:-} ]]; then
         wget -O - ${LLVM_URL} | tar -Jxvf - --strip 1 -C llvm-${LLVM_VERSION}
     fi
     llvm-${LLVM_VERSION}/bin/llvm-config --version;
-    export LLVM_CONFIG="llvm-${LLVM_VERSION}/bin/llvm-config";
+    export LLVM_CONFIG=llvm-${LLVM_VERSION}/bin/llvm-config;
 fi
 
-# There are cases where the directory exists, but the exe is not available.
-# Use this workaround for now.
-if [[ ! -x cmake/bin/cmake && -d cmake ]]; then
-    rm -fr cmake
-fi
-if [[ ! -d cmake && ${BUILD_SYSTEM:-} == cmake ]]; then
-  CMAKE_URL="http://www.cmake.org/files/v3.5/cmake-3.5.2-Linux-x86_64.tar.gz"
-  mkdir cmake && wget --no-check-certificate -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
-fi
+export PATH=${HOME}/bin:$PATH
 
-# NOTE, changed from PWD -> HOME
-export PATH=$HOME/bin:$PATH
-
-# What versions are we ACTUALLY running?
-if [ -x $HOME/bin/g++ ]; then
-    $HOME/bin/g++ -v
-fi
-if [ -x $HOME/bin/clang ]; then
-    $HOME/bin/clang -v
-fi
-# Avoid `spurious errors` caused by ~/.npm permission issues
-# Does it already exist? Who owns? What permissions?
-ls -lah ~/.npm || mkdir ~/.npm
-# Make sure we own it
-chown -Rc $USER ~/.npm
-# We use this so we can filter the subtrees from our coverage report
-pip install --user https://github.com/codecov/codecov-python/archive/master.zip
+[[ -x $HOME/bin/g++ ]] && ${HOME}/bin/g++ -v
+[[ -x $HOME/bin/clang ]] && ${HOME}/bin/clang -v
 
 bash scripts/install-boost.sh
 bash scripts/install-valgrind.sh
@@ -63,12 +58,10 @@ bash scripts/install-valgrind.sh
 # Download the archive
 wget http://downloads.sourceforge.net/ltp/lcov-1.12.tar.gz
 # Extract to ~/lcov-1.12
-tar xfvz lcov-1.12.tar.gz -C $HOME
+tar xfvz lcov-1.12.tar.gz -C ${HOME}
 # Set install path
-mkdir -p $LCOV_ROOT
-cd $HOME/lcov-1.12 && make install PREFIX=$LCOV_ROOT
+mkdir -p ${LCOV_ROOT}
 
-# Install coveralls reporter
-cd $HERE
-mkdir -p node_modules
-npm install coveralls
+pushd ${HOME}/lcov-1.12 > /dev/null
+make install PREFIX=${LCOV_ROOT}
+popd > /dev/null

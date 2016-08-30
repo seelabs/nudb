@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
+
 set -eu
 
-if [[ $(uname) == "Darwin" ]]; then
+if [[ $(uname) == Darwin ]]; then
   # -o runs after loading the binary
   # -k runs after any crash
-  # We use a ghetto appromixation of --return-child-result, exiting with
-  # 1 on a crash
+  # use script to exit with 1 on crash (like gdb's --return-child-result)
   lldb --batch \
        -o 'run' \
        -k 'thread backtrace all' \
