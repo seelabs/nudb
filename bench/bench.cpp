@@ -504,7 +504,7 @@ main(int argc, char** argv)
         auto write_val = [&](
             result_dict const& dict, std::uint64_t key) {
             dout << std::setw(col_w) << std::fixed << std::setprecision(2);
-            // Take the average of all the values, or "NA"" if none collected
+            // Take the average of all the values, or "NA" if none collected
             auto l = dict.lower_bound(key);
             auto u = dict.upper_bound(key);
             if (l == u)
@@ -518,7 +518,7 @@ main(int argc, char** argv)
                 dout << total / std::distance(l, u);
             }
         };
-        for (std::uint64_t n = 0; n <= max_sample; n = n ? 10 * n : 10)
+        for (std::uint64_t n = 100; n <= max_sample; n *= 10)
         {
             if (n<min_sample)
                 continue;
